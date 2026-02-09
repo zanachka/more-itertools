@@ -33,7 +33,7 @@ from itertools import (
     zip_longest,
 )
 from math import prod, comb, isqrt, gcd
-from operator import mul, is_, not_, itemgetter, getitem, index
+from operator import mul, getitem, index, is_, itemgetter, not_, truediv
 from random import randrange, sample, choice, shuffle
 from sys import hexversion
 
@@ -74,6 +74,7 @@ __all__ = [
     'random_product',
     'repeatfunc',
     'roundrobin',
+    'running_mean',
     'running_median',
     'sieve',
     'sliding_window',
@@ -1393,6 +1394,21 @@ def running_median(iterable, *, maxlen=None):
         return _running_median_minheap_only(iterator)  # pragma: no cover
 
     return _running_median_minheap_and_maxheap(iterator)  # pragma: no cover
+
+
+def running_mean(iterable):
+    """Yield the average of all values seen so far.
+
+    >>> iterable = [100, 200, 600]
+    >>> all_means = running_mean(iterable)
+    >>> next(all_means)
+    100.0
+    >>> next(all_means)
+    150.0
+    >>> next(all_means)
+    300.0
+    """
+    return map(truediv, accumulate(iterable), count(1))
 
 
 def random_derangement(iterable):

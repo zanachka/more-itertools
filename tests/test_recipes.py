@@ -1507,6 +1507,29 @@ class MultinomialTests(TestCase):
             multinomial([5, 7])  # No sequence inputs
 
 
+class RunningMeanTests(TestCase):
+    def test_basic(self):
+        for i, (iterable, expected) in enumerate(
+            [
+                ([], []),
+                ([1], [1.0]),
+                ([1, 2], [1.0, 1.5]),
+                (
+                    [Fraction(1, 1), Fraction(2, 1)],
+                    [Fraction(1, 1), Fraction(3, 2)],
+                ),
+                (
+                    [Decimal('1.0'), Decimal('2.0')],
+                    [Decimal('1.0'), Decimal('1.5')],
+                ),
+                ([8.5, 9.5, 7.5, 6.5], [8.5, 9.0, 8.5, 8.0]),
+            ]
+        ):
+            with self.subTest(i=i):
+                actual = list(mi.running_mean(iterable))
+                self.assertEqual(actual, expected)
+
+
 class RunningMedianTests(TestCase):
     def test_vs_statistics_median(self):
         running_median = mi.running_median
